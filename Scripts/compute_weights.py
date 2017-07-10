@@ -10,6 +10,7 @@ from path import Path
 # Import arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--dir', type=str, help='Path to the folder containing the images with annotations')
+parser.add_argument('--sparce', type=int, default=1, help='Enable if only compute for scene-0000 (i.e. much faster but good approximation)')
 args = parser.parse_args()
 
 if args.dir:
@@ -28,10 +29,12 @@ image_list = sorted(base_dir.walkfiles('*.label.png'))
 #print(image_list[0])
 
 print "Number of images:", len(image_list)
-# import copy
-# il = copy.deepcopy(image_list)
-# image_list = [i for i in il if 'scene-0000' in i]
-# print "Number of images:", len(image_list)
+
+if args.sparce:
+    import copy
+    il = copy.deepcopy(image_list)
+    image_list = [i for i in il if 'scene-0000' in i]
+    print "Number of images:", len(image_list)
 
 def count_all_pixels(image_list):
     dic_class_imgcount = dict()
