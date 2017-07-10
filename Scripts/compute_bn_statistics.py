@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 
 
 
-caffe_root = '/SegNet/caffe-segnet/' 			# Change this to the absolute directoy to SegNet Caffe
+caffe_root = '/work/code/SegNet/caffe-segnet/' 			# Change this to the absolute directoy to SegNet Caffe
 import sys
 sys.path.insert(0, caffe_root + 'python')
 
@@ -181,7 +181,10 @@ if __name__ == '__main__':
     train_size = len(train_ims)
     minibatch_size = testable_msg.layer[0].dense_image_data_param.batch_size
     num_iterations = train_size // minibatch_size + train_size % minibatch_size
-    in_h, in_w =(360, 480)
+    if False:
+        in_h, in_w =(360, 480)
+    else:
+        in_h, in_w = (480, 640)
     test_net, test_msg = make_test_files(BN_calc_path, args.weights, num_iterations,
                                          in_h, in_w)
     
