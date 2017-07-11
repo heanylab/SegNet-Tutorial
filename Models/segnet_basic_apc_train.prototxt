@@ -1,0 +1,609 @@
+name: "segnet"
+layer {
+  name: "data"
+  type: "DenseImageData"
+  top: "data"
+  top: "label"
+  dense_image_data_param {
+    source: "/data/APC4SegNet/train/train_tote_scene_all.txt"	# Change this to the absolute path to your data file
+    #batch_size: 9 # for computing bn statistics
+    batch_size: 11 # for training
+    shuffle: true
+  }
+}
+layer {
+  name: "norm"
+  type: "LRN"
+  bottom: "data"
+  top: "norm"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "norm"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv1"
+  top: "conv1"
+  name: "conv1_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  top: "pool1_mask"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv2"
+  top: "conv2"
+  name: "conv2_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  top: "pool2_mask"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv3"
+  top: "conv3"
+  name: "conv3_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "conv3"
+  top: "pool3"
+  top: "pool3_mask"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "pool3"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv4"
+  top: "conv4"
+  name: "conv4_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "conv4"
+  top: "pool4"
+  top: "pool4_mask"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "upsample4"
+  type: "Upsample"
+  bottom: "pool4"
+  bottom: "pool4_mask"
+  top: "upsample4"
+  upsample_param {
+    scale: 2
+    #pad_out_h: true
+    upsample_w: 80
+    upsample_h: 60
+  }
+}
+layer {
+  name: "conv_decode4"
+  type: "Convolution"
+  bottom: "upsample4"
+  top: "conv_decode4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_decode4"
+  top: "conv_decode4"
+  name: "conv_decode4_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "upsample3"
+  type: "Upsample"
+  bottom: "conv_decode4"
+  bottom: "pool3_mask"
+  top: "upsample3"
+  upsample_param {
+    scale: 2
+  }
+}
+layer {
+  name: "conv_decode3"
+  type: "Convolution"
+  bottom: "upsample3"
+  top: "conv_decode3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_decode3"
+  top: "conv_decode3"
+  name: "conv_decode3_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "upsample2"
+  type: "Upsample"
+  bottom: "conv_decode3"
+  bottom: "pool2_mask"
+  top: "upsample2"
+  upsample_param {
+    scale: 2
+  }
+}
+layer {
+  name: "conv_decode2"
+  type: "Convolution"
+  bottom: "upsample2"
+  top: "conv_decode2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_decode2"
+  top: "conv_decode2"
+  name: "conv_decode2_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "upsample1"
+  type: "Upsample"
+  bottom: "conv_decode2"
+  bottom: "pool1_mask"
+  top: "upsample1"
+  upsample_param {
+    scale: 2
+  }
+}
+layer {
+  name: "conv_decode1"
+  type: "Convolution"
+  bottom: "upsample1"
+  top: "conv_decode1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 7
+    pad: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_decode1"
+  top: "conv_decode1"
+  name: "conv_decode1_bn"
+  type: "BN"
+  bn_param {
+	scale_filler {
+	  type: "constant"
+	  value: 1
+	}
+	shift_filler {
+	  type: "constant"
+	  value: 0.001
+	}
+ }
+}
+layer {
+  name: "conv_classifier"
+  type: "Convolution"
+  bottom: "conv_decode1"
+  top: "conv_classifier"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 40 #11
+    kernel_size: 1
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "conv_classifier"
+  bottom: "label"
+  top: "loss"
+  softmax_param {engine: CAFFE}
+  loss_param: {
+    weight_by_label_freqs: true
+    #ignore_label: 0 #11
+#    class_weighting: 0.2595
+#    class_weighting: 0.1826
+#    class_weighting: 4.5640
+#    class_weighting: 0.1417
+#    class_weighting: 0.9051
+#    class_weighting: 0.3826
+#    class_weighting: 9.6446
+#    class_weighting: 1.8418
+#    class_weighting: 0.6823
+#    class_weighting: 6.2478
+#    class_weighting: 7.3614
+
+
+# tote (scene-0000)
+#     class_weighting: 0.0738
+#     class_weighting: 0.7144
+#     class_weighting: 0.3513
+#     class_weighting: 0.9933
+#     class_weighting: 1.0631
+#     class_weighting: 0.9014
+#     class_weighting: 1.5182
+#     class_weighting: 1.5993
+#     class_weighting: 0.4656
+#     class_weighting: 1.2971
+#     class_weighting: 1.7522
+#     class_weighting: 0.4178
+#     class_weighting: 1.3628
+#     class_weighting: 3.2653
+#     class_weighting: 1.4224
+#     class_weighting: 3.9274
+#     class_weighting: 1.62
+#     class_weighting: 0.8012
+#     class_weighting: 0.3387
+#     class_weighting: 0.4404
+#     class_weighting: 0.4807
+#     class_weighting: 0.3646
+#     class_weighting: 0.5861
+#     class_weighting: 0.7133
+#     class_weighting: 0.6334
+#     class_weighting: 2.4702
+#     class_weighting: 2.5845
+#     class_weighting: 0.3517
+#     class_weighting: 1.0068
+#     class_weighting: 2.591
+#     class_weighting: 1.5734
+#     class_weighting: 0.8777
+#     class_weighting: 0.2282
+#     class_weighting: 2.9741
+#     class_weighting: 11.7759
+#     class_weighting: 1.2003
+#     class_weighting: 0.7147
+#     class_weighting: 15.1013
+#     class_weighting: 0.6891
+#     class_weighting: 1.3002
+
+# tote (scene-all)
+    class_weighting: 0.0538
+    class_weighting: 0.9125
+    class_weighting: 0.3587
+    class_weighting: 0.8876
+    class_weighting: 1.2571
+    class_weighting: 0.9232
+    class_weighting: 1.8725
+    class_weighting: 2.1623
+    class_weighting: 0.4947
+    class_weighting: 0.4969
+    class_weighting: 2.1534
+    class_weighting: 0.5765
+    class_weighting: 1.2421
+    class_weighting: 2.5670
+    class_weighting: 1.6492
+    class_weighting: 3.8100
+    class_weighting: 1.4008
+    class_weighting: 0.6721
+    class_weighting: 0.3237
+    class_weighting: 0.5794
+    class_weighting: 0.6069
+    class_weighting: 0.3115
+    class_weighting: 0.5082
+    class_weighting: 0.8394
+    class_weighting: 0.8938
+    class_weighting: 2.5343
+    class_weighting: 2.5536
+    class_weighting: 0.3224
+    class_weighting: 1.2404
+    class_weighting: 2.6567
+    class_weighting: 0.9676
+    class_weighting: 1.0346
+    class_weighting: 1.1034
+    class_weighting: 4.5110
+    class_weighting: 1.8286
+    class_weighting: 2.1297
+    class_weighting: 0.9613
+    class_weighting: 2.1976
+    class_weighting: 0.7337
+    class_weighting: 1.2792
+  
+
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "conv_classifier"
+  bottom: "label"
+  top: "accuracy"
+  top: "per_class_accuracy"
+}

@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, required=True)
 parser.add_argument('--weights', type=str, required=True)
 parser.add_argument('--iter', type=int, required=True)
+parser.add_argument('--inc', type=int, default=1)
 args = parser.parse_args()
 
 caffe.set_mode_gpu()
@@ -28,7 +29,7 @@ net = caffe.Net(args.model,
 
 
 for i in range(0, args.iter):
-        for i in range(0, 18):
+        for i in range(0, args.inc):
 	    net.forward()
 
 	image = net.blobs['data'].data

@@ -12,4 +12,4 @@ max_iter: 100000
 weight_decay: 0.0005
 snapshot: 10000
 snapshot_prefix: "/work/code/SegNet/Models/Training/segnet_apc"  	# Change this to the absolute path to where you wish to output solver snapshots
-solver_mode: GPU
+olver_mode: GPU

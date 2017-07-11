@@ -1,0 +1,15 @@
+net: "/work/code/SegNet/Models/segnet_basic_apc_train.prototxt"  		# Change this to the absolute path to your model file
+test_initialization: false
+test_iter: 1
+test_interval: 10000000
+base_lr: 0.1
+lr_policy: "step"
+gamma: 0.1
+stepsize: 10000
+display: 10
+momentum: 0.9
+max_iter: 30000
+weight_decay: 0.0005
+snapshot: 1000
+snapshot_prefix: "/work/code/SegNet/Models/Training/segnet_basic_apc"  	# Change this to the absolute path to where you wish to output solver snapshots
+solver_mode: GPU
