@@ -7,7 +7,9 @@ layer {
   dense_image_data_param {
     #source: "/data/APC4SegNet/train/train.txt"	# Change this to the absolute path to your data file
     source: "/data/APC4SegNet/train/test_tote_multi_scene1.txt"	# Change this to the absolute path to your data file
+    #source: "/data/APC4SegNet/train/train_tote_scene_all.txt"
     batch_size: 1
+    shuffle: true
   }
 }
 layer {

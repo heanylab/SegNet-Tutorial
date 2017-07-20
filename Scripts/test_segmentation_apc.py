@@ -29,7 +29,7 @@ net = caffe.Net(args.model,
 
 
 for i in range(0, args.iter):
-        for i in range(0, args.inc):
+        for _ in range(0, args.inc):
 	    net.forward()
 
 	image = net.blobs['data'].data

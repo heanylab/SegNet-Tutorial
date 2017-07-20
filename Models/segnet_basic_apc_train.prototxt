@@ -6,8 +6,8 @@ layer {
   top: "label"
   dense_image_data_param {
     source: "/data/APC4SegNet/train/train_tote_scene_all.txt"	# Change this to the absolute path to your data file
-    #batch_size: 9 # for computing bn statistics
-    batch_size: 11 # for training
+    batch_size: 9 # for computing bn statistics
+    #batch_size: 11 # for training
     shuffle: true
   }
 }

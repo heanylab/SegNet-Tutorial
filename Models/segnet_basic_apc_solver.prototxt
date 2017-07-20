@@ -2,13 +2,13 @@ net: "/work/code/SegNet/Models/segnet_basic_apc_train.prototxt"  		# Change this
 test_initialization: false
 test_iter: 1
 test_interval: 10000000
-base_lr: 0.1
+base_lr: 0.01
 lr_policy: "step"
 gamma: 0.1
-stepsize: 10000
-display: 10
+stepsize: 500000
+display: 5
 momentum: 0.9
-max_iter: 30000
+max_iter: 50000
 weight_decay: 0.0005
 snapshot: 1000
 snapshot_prefix: "/work/code/SegNet/Models/Training/segnet_basic_apc"  	# Change this to the absolute path to where you wish to output solver snapshots
